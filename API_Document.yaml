@@ -1,0 +1,153 @@
+openapi: 3.1.0
+info:
+  title: Pharmacy_mask
+  description: "API List"
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:1234/api/'
+
+paths:
+  /searchByOpeningHours:
+    post:
+      summary: List all pharmacies open at a specific time and on a day of the week if requested.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                day:
+                  type: string
+                hour[start]:
+                  type: string
+                hour[end]:
+                  type: string
+              example:
+                day: Mon
+                hour[start]: 15:00:00
+                hour[end]: 19:00:00
+
+  /getMasks:
+    post:
+      summary: List all masks sold by a given pharmacy, sorted by mask name or price.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+              example:
+                id: 1
+
+  /priceAndKind:
+    post:
+      summary: List all pharmacies with more or less than x mask products within a price range.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                topLimit:
+                  type: string
+                bottomLimit:
+                  type: string
+                operators:
+                  type: string
+                kinds:
+                  type: string
+              example:
+                topLimit: "15"
+                bottomLimit: "5.2"
+                operators: ">"
+                kinds: "2"
+
+  /topBuyer:
+    post:
+      summary: The top x users by total transaction amount of masks within a date range.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                top:
+                  type: string
+
+              example:
+                startDate: "2021-01-04 15:18:51"
+                endDate: "2021-01-15 22:18:51"
+                top: "10"
+
+  /statisticsByDate:
+    post:
+      summary: The total number of masks and dollar value of transactions within a date range.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+
+              example:
+                startDate: "2021-01-04 15:18:51"
+                endDate: "2021-01-15 22:18:51"
+
+  /keywordSearch:
+    post:
+      summary: Search for pharmacies or masks by name, ranked by relevance to the search term.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              example:
+                startDate: "Smile"
+
+  /buyMask:
+    post:
+      summary: Process a user purchases a mask from a pharmacy, and handle all relevant data changes in an atomic transaction.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                userID:
+                  type: string
+                userName:
+                  type: string
+                pharmacyName:
+                  type: string
+                maskName:
+                  type: string
+                amount:
+                  type: string
+                date:
+                  type: string
+                maskID:
+                  type: string
+                pharmacyID:
+                  type: string
+              example:
+                userID: "2"
+                userName: "Ada Larson"
+                pharmacyName: "First Care Rx"
+                maskName: "Second Smile (blue) (10 per pack)"
+                amount: "49.83"
+                date: "2021-02-03 20:58:57"
+                maskID: "7"
+                pharmacyID: "3"

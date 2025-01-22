@@ -1,0 +1,48 @@
+
+services:
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb-T
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin01
+      MYSQL_DATABASE: pharmacy
+    ports:
+      - "3306:3306"
+    networks:
+      - dev_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-T
+    volumes:
+      - ./pharmacy/:/var/www/pharmacy
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - "1234:1234"
+      - "8080:8080"
+    depends_on:
+      - mariadb
+    networks:
+      - dev_network
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: php-T
+    volumes:
+      - ./pharmacy/:/var/www/pharmacy
+    working_dir: /var/www/pharmacy
+    expose:
+      - 9000
+    #command: ["php", "artisan", "pharmacy-init"]
+    depends_on:
+      - nginx
+    networks:
+      - dev_network
+
+
+
+networks:
+  dev_network:
